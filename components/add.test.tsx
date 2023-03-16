@@ -1,5 +1,5 @@
 import { screen, render } from '@testing-library/react';
-import '@testing-library/jest-dom';
+// import '@testing-library/jest-dom';
 import Add from './add';
 
 test('add two numbers', () => {
