@@ -16,6 +16,7 @@ const customJestConfig = {
   moduleDirectories: ['node_modules', 'components'],
   testEnvironment: 'jest-environment-jsdom',
   setupFilesAfterEnv: ['@testing-library/jest-dom/extend-expect'],
+  collectCoverageFrom: ['**/components/*.{ts,tsx}', '**/pages/*.{ts,tsx}'],
 };
 
 // createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async
