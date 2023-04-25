@@ -1,7 +1,7 @@
-function generateRandomArray(): number[] {
+export function generateRandomArray(): number[] {
   const length = 10;
   const max = 50;
-  const min = 0;
+  const min = 1;
   const randomArray: number[] = [];
 
   while (randomArray.length < length) {
@@ -13,4 +13,10 @@ function generateRandomArray(): number[] {
   }
 
   return randomArray;
+}
+
+export function swap(arr: number[], xp: number, yp: number) {
+  var temp = arr[xp];
+  arr[xp] = arr[yp];
+  arr[yp] = temp;
 }
