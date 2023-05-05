@@ -24,7 +24,7 @@ describe("generateRandomArray function", () => {
 describe("swap function", () => {
   test("swap an array of two elements", () => {
     const array = [1, 2];
-    swap(array, 0, 1);
-    expect(array).toEqual([2, 1]);
+    const swappedData = swap(array, 0, 1);
+    expect(swappedData).toEqual([2, 1]);
   });
 });
