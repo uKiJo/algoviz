@@ -10,12 +10,15 @@ export const useUpdateBarChart = (
   data: Data[]
 ) => {
   const [currentStep, setCurrentStep] = useState(-1);
+  const [pass, setPass] = useState(0);
   const [start, setStart] = useState(false);
   const [end, setEnd] = useState(false);
-  const [sortedData, setSortedData] = useState(data);
+  const [sortedData, setSortedData] = useState<Data[]>(data);
   const [isSelectStep, setIsSelectStep] = useState(false);
-  const [iterator, setI] = useState(0);
-  const [swapped, setSwapped] = useState(false);
+  const [isSwapped, setIsSwapped] = useState(false);
+  const [sortedItems, setSortedItems] = useState(-1);
+
+  const lastStepInPass = currentStep === sortedData.length - pass - 2;
 
   useEffect(() => {
     const svg = select(svgRef.current);
@@ -38,14 +41,11 @@ export const useUpdateBarChart = (
         .attr("fill", (d, i) => {
           if ((i == currentStep || i == currentStep + 1) && start) {
             return "green";
-          } else if (
-            sortedData.length - iterator - 1 === i &&
-            currentStep === i
-          ) {
-            return end && "red";
-          } else {
-            return "steelblue";
           }
+          if (sortedData.length - sortedItems - 1 <= i && end) {
+            return "red";
+          }
+          return "steelblue";
         });
 
       // Update x-axis
@@ -58,33 +58,62 @@ export const useUpdateBarChart = (
     };
 
     reorderBars();
-  }, [sortedData, start, isSelectStep, currentStep]);
+  }, [sortedData, start, isSelectStep, currentStep, end, sortedItems]);
 
   const handleSortClick = () => {
-    if (currentStep === sortedData.length - iterator - 1) {
-      console.log("current step is greather than i - 1");
-      setStart(false);
-      setEnd(true);
+    // if the pass is finished and swapped is false then the list is sorted!
+    if (currentStep == sortedData.length - pass - 1 && !isSwapped) {
+      console.log("SORTED!");
+      setSortedItems(5);
       return;
     }
-    if (currentStep == -1) setStart(true);
+
+    if (currentStep === sortedData.length - pass - 1) {
+      console.log("pass finished!");
+      setStart(true);
+      setIsSwapped(false);
+      setPass(pass + 1);
+      setCurrentStep(0);
+      return;
+    }
+    if (currentStep <= 0) setStart(true);
+
     if (isSelectStep) {
-      if (sortedData[currentStep].units > sortedData[currentStep + 1].units) {
+      if (isCurrentGreaterThanNext()) {
         const swapped = swap(sortedData, currentStep, currentStep + 1);
         setSortedData(swapped);
-        // setSwapped(true);
         setIsSelectStep(false);
+        setIsSwapped(true);
       } else {
-        // setSwapped(false);
-        setCurrentStep(currentStep + 1);
+        if (lastStepInPass) {
+          console.log("ffinal");
+          setStart(false);
+          setEnd(true);
+          setSortedItems(sortedItems + 1);
+          setCurrentStep(currentStep + 1);
+        } else {
+          setCurrentStep(currentStep + 1);
+        }
       }
     } else {
-      setCurrentStep(currentStep + 1);
-      setIsSelectStep(true);
+      if (lastStepInPass) {
+        console.log("ffinal");
+        setStart(false);
+        setEnd(true);
+        setCurrentStep(currentStep + 1);
+        // setPass(pass + 1);
+        setSortedItems(sortedItems + 1);
+        setIsSelectStep(true);
+      } else {
+        setCurrentStep(currentStep + 1);
+        setIsSelectStep(true);
+      }
     }
-    console.log(sortedData.length);
-    console.log(currentStep);
   };
+
+  function isCurrentGreaterThanNext() {
+    return sortedData[currentStep].units > sortedData[currentStep + 1].units;
+  }
 
   return handleSortClick;
 };
