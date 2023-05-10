@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { scaleBand } from "d3-scale";
 import { select } from "d3-selection";
 import { axisBottom } from "d3-axis";
@@ -12,6 +12,7 @@ export const useUpdateBarChart = (
   const [currentStep, setCurrentStep] = useState(-1);
   const [pass, setPass] = useState(0);
   const [start, setStart] = useState(false);
+  const [play, setPlay] = useState(false);
   const [end, setEnd] = useState(false);
   const [sortedData, setSortedData] = useState<Data[]>(data);
   const [isSelectStep, setIsSelectStep] = useState(false);
@@ -60,60 +61,105 @@ export const useUpdateBarChart = (
     reorderBars();
   }, [sortedData, start, isSelectStep, currentStep, end, sortedItems]);
 
+  const handlePlay = () => {
+    handleSortClick();
+    setPlay(true);
+    console.log(currentStep);
+  };
+
+  useEffect(() => {
+    const intervalId =
+      play &&
+      setInterval(() => {
+        handlePlay();
+      }, 1000);
+
+    if (sortedItems === sortedData.length - 1) clearInterval(intervalId);
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [sortedData, start, isSelectStep, currentStep, end, sortedItems]);
+
   const handleSortClick = () => {
+    const isPassFinished = currentStep === sortedData.length - pass - 1;
+
     // if the pass is finished and swapped is false then the list is sorted!
-    if (currentStep == sortedData.length - pass - 1 && !isSwapped) {
-      console.log("SORTED!");
-      setSortedItems(5);
-      return;
-    }
-
-    if (currentStep === sortedData.length - pass - 1) {
-      console.log("pass finished!");
-      setStart(true);
-      setIsSwapped(false);
-      setPass(pass + 1);
-      setCurrentStep(0);
-      return;
-    }
-    if (currentStep <= 0) setStart(true);
-
-    if (isSelectStep) {
-      if (isCurrentGreaterThanNext()) {
-        const swapped = swap(sortedData, currentStep, currentStep + 1);
-        setSortedData(swapped);
-        setIsSelectStep(false);
-        setIsSwapped(true);
-      } else {
-        if (lastStepInPass) {
-          console.log("ffinal");
-          setStart(false);
-          setEnd(true);
-          setSortedItems(sortedItems + 1);
-          setCurrentStep(currentStep + 1);
-        } else {
-          setCurrentStep(currentStep + 1);
-        }
+    if (isPassFinished) {
+      if (!isSwapped) {
+        handleTerminateSort();
+        return;
       }
+      handleNextPass();
     } else {
-      if (lastStepInPass) {
-        console.log("ffinal");
-        setStart(false);
-        setEnd(true);
-        setCurrentStep(currentStep + 1);
-        // setPass(pass + 1);
-        setSortedItems(sortedItems + 1);
-        setIsSelectStep(true);
+      if (currentStep <= 0) setStart(true);
+
+      if (isSelectStep) {
+        handleSelectStep();
       } else {
-        setCurrentStep(currentStep + 1);
-        setIsSelectStep(true);
+        handleNonSelectStep();
       }
     }
   };
+
+  function handleTerminateSort() {
+    console.log("List is sorted!");
+    setSortedItems(sortedData.length - 1);
+  }
+
+  function handleNextPass() {
+    console.log("Pass finished!");
+    setStart(true);
+    setIsSwapped(false);
+    setPass(pass + 1);
+    setCurrentStep(0);
+  }
+
+  function handleSelectStep() {
+    if (isCurrentGreaterThanNext()) {
+      swapItems(currentStep, currentStep + 1);
+    } else {
+      handleNonSwapStep();
+    }
+  }
+
+  function handleNonSelectStep() {
+    if (lastStepInPass) {
+      console.log("Final step in pass");
+      setStart(false);
+      setEnd(true);
+      setCurrentStep(currentStep + 1);
+      setSortedItems(sortedItems + 1);
+      setIsSelectStep(true);
+    } else {
+      setCurrentStep(currentStep + 1);
+      setIsSelectStep(true);
+    }
+  }
+
+  function handleNonSwapStep() {
+    if (lastStepInPass) {
+      console.log("Final step in pass");
+      setStart(false);
+      setEnd(true);
+      setCurrentStep(currentStep + 1);
+      setSortedItems(sortedItems + 1);
+    } else {
+      setCurrentStep(currentStep + 1);
+      setIsSelectStep(true);
+    }
+  }
+
+  function swapItems(firstIndex: number, secondIndex: number) {
+    const swapped = swap(sortedData, firstIndex, secondIndex);
+    setSortedData(swapped);
+    setIsSelectStep(false);
+    setIsSwapped(true);
+  }
 
   function isCurrentGreaterThanNext() {
     return sortedData[currentStep].units > sortedData[currentStep + 1].units;
   }
 
-  return handleSortClick;
+  return { handleSortClick, handlePlay };
 };
