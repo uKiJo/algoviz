@@ -42,7 +42,7 @@ const BarChart: React.FC = () => {
   const [data] = useState(myData);
 
   useCreateBarChart(svgRef, data);
-  const { handleSortClick, handlePlay } = useUpdateBarChart(svgRef, data);
+  const { handleSortClick, handlePlay, play } = useUpdateBarChart(svgRef, data);
 
   return (
     <div>
@@ -50,7 +50,8 @@ const BarChart: React.FC = () => {
         <g className="x-axis" transform={`translate(0, ${300})`} />
         <g className="y-axis" />
       </svg>
-      <button onClick={handlePlay}>Sort</button>
+      {/* <button onClick={handleSortClick}>Sort</button> */}
+      <button onClick={handlePlay}> {play ? "Pause" : "Play"}</button>
     </div>
   );
 };

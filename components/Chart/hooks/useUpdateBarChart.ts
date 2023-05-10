@@ -13,6 +13,7 @@ export const useUpdateBarChart = (
   const [pass, setPass] = useState(0);
   const [start, setStart] = useState(false);
   const [play, setPlay] = useState(false);
+  const [pause, setPause] = useState(false);
   const [end, setEnd] = useState(false);
   const [sortedData, setSortedData] = useState<Data[]>(data);
   const [isSelectStep, setIsSelectStep] = useState(false);
@@ -62,8 +63,7 @@ export const useUpdateBarChart = (
   }, [sortedData, start, isSelectStep, currentStep, end, sortedItems]);
 
   const handlePlay = () => {
-    handleSortClick();
-    setPlay(true);
+    setPlay(!play);
     console.log(currentStep);
   };
 
@@ -71,7 +71,7 @@ export const useUpdateBarChart = (
     const intervalId =
       play &&
       setInterval(() => {
-        handlePlay();
+        handleSortClick();
       }, 1000);
 
     if (sortedItems === sortedData.length - 1) clearInterval(intervalId);
@@ -79,11 +79,10 @@ export const useUpdateBarChart = (
     return () => {
       clearInterval(intervalId);
     };
-  }, [sortedData, start, isSelectStep, currentStep, end, sortedItems]);
+  }, [sortedData, start, isSelectStep, currentStep, end, sortedItems, play]);
 
   const handleSortClick = () => {
     const isPassFinished = currentStep === sortedData.length - pass - 1;
-
     // if the pass is finished and swapped is false then the list is sorted!
     if (isPassFinished) {
       if (!isSwapped) {
@@ -161,5 +160,5 @@ export const useUpdateBarChart = (
     return sortedData[currentStep].units > sortedData[currentStep + 1].units;
   }
 
-  return { handleSortClick, handlePlay };
+  return { handleSortClick, handlePlay, play };
 };
