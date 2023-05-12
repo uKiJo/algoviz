@@ -3,6 +3,7 @@ import { axisBottom, axisLeft } from "d3-axis";
 import { scaleBand, scaleLinear } from "d3-scale";
 import { select } from "d3-selection";
 import { useEffect } from "react";
+import "d3-transition";
 
 import { Data } from "../types";
 

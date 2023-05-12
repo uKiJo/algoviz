@@ -1,14 +1,6 @@
 import React, { useRef, useEffect, useState } from "react";
-import { Data } from "./types";
-
-import { scaleBand, scaleLinear } from "d3-scale";
-import { max } from "d3-array";
-import { select } from "d3-selection";
-import { axisBottom, axisLeft } from "d3-axis";
-import { swap } from "../../application/utils";
-import "d3-transition";
 import { useCreateBarChart } from "./hooks/useCreateBarChart";
-import { useUpdateBarChart } from "./hooks/useUpdateBarChart";
+import { useBubbleSort } from "./hooks/useBubbleSort";
 
 const myData = [
   {
@@ -25,7 +17,7 @@ const myData = [
   },
   {
     name: "hoge",
-    units: 4,
+    units: 6,
   },
   {
     name: "piyo",
@@ -33,7 +25,7 @@ const myData = [
   },
   {
     name: "hogera",
-    units: 6,
+    units: 4,
   },
 ];
 
@@ -42,7 +34,7 @@ const BarChart: React.FC = () => {
   const [data] = useState(myData);
 
   useCreateBarChart(svgRef, data);
-  const { handleSortClick, handlePlay, play } = useUpdateBarChart(svgRef, data);
+  const { handleStepForward, handlePlay, play } = useBubbleSort(svgRef, data);
 
   return (
     <div>
@@ -50,7 +42,7 @@ const BarChart: React.FC = () => {
         <g className="x-axis" transform={`translate(0, ${300})`} />
         <g className="y-axis" />
       </svg>
-      {/* <button onClick={handleSortClick}>Sort</button> */}
+      <button onClick={handleStepForward}>Step</button>
       <button onClick={handlePlay}> {play ? "Pause" : "Play"}</button>
     </div>
   );
