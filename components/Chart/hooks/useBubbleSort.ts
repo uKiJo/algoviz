@@ -47,16 +47,16 @@ export const useBubbleSort = (
   const [isSelectStep, setIsSelectStep] = useState(false);
   const [isSwapped, setIsSwapped] = useState(false);
   const [sortedItems, setSortedItems] = useState(-1);
-  // const [state, setState] = useState({
-  //   currentStep: -1,
-  //   pass: 0,
-  //   start: false,
-  //   end: false,
-  //   sortedData: data,
-  //   isSelectStep: false,
-  //   isSwapped: false,
-  //   sortedItems: -1,
-  // });
+  const [state, setState] = useState({
+    currentStep: -1,
+    pass: 0,
+    start: false,
+    end: false,
+    sortedData: data,
+    isSelectStep: false,
+    isSwapped: false,
+    sortedItems: -1,
+  });
 
   // const lastStepInPass = currentStep === sortedData.length - pass - 2;
 
@@ -65,24 +65,31 @@ export const useBubbleSort = (
 
     // Function to reorder bars
     const reorderBars = () => {
+      console.log("EFFECT");
       // Update xScale domain
       const xScale = scaleBand()
-        .domain(sortedData.map((d) => d.name))
+        .domain(state.sortedData.map((d) => d.name))
         .range([0, 400])
         .padding(0.2);
 
       // Animate transition
       svg
         .selectAll("rect")
-        .data(sortedData, (d: Data) => d.name)
+        .data(state.sortedData, (d: Data) => d.name)
         .transition()
         .duration(500)
         .attr("x", (d) => xScale(d.name))
         .attr("fill", (d, i) => {
-          if ((i == currentStep || i == currentStep + 1) && start) {
+          if (
+            (i == state.currentStep || i == state.currentStep + 1) &&
+            state.start
+          ) {
             return "green";
           }
-          if (sortedData.length - sortedItems - 1 <= i && end) {
+          if (
+            state.sortedData.length - state.sortedItems - 1 <= i &&
+            state.end
+          ) {
             return "red";
           }
           return "steelblue";
@@ -98,7 +105,7 @@ export const useBubbleSort = (
     };
 
     reorderBars();
-  }, [currentStep, end, sortedData, sortedItems, start]);
+  }, [state, svgRef]);
 
   // useEffect(() => {
   //   const intervalId =
@@ -120,30 +127,28 @@ export const useBubbleSort = (
   };
 
   const handleStepForward = () => {
-    // console.log(state);
-    const nextStepStates = getNextStepStates({
-      pass,
-      currentStep,
-      sortedData,
-      sortedItems,
-      isSwapped,
-      isSelectStep,
-      end,
-      start,
-    });
-    console.log(nextStepStates.sortedData);
-    console.log(nextStepStates.currentStep);
-    console.log(nextStepStates.start);
+    console.log(state);
+    // const nextStepStates = getNextStepStates({
+    //   pass,
+    //   currentStep,
+    //   sortedData,
+    //   sortedItems,
+    //   isSwapped,
+    //   isSelectStep,
+    //   end,
+    //   start,
+    // });
+    const nextStepStates = getNextStepStates(state);
 
-    // setState(nextStepStates);
-    setPass(nextStepStates.pass);
-    setIsSwapped(nextStepStates.isSwapped);
-    setSortedData(nextStepStates.sortedData);
-    setSortedItems(nextStepStates.sortedItems);
-    setCurrentStep(nextStepStates.currentStep);
-    setIsSelectStep(nextStepStates.isSelectStep);
-    setStart(nextStepStates.start);
-    setEnd(nextStepStates.end);
+    setState(nextStepStates);
+    // setPass(nextStepStates.pass);
+    // setIsSwapped(nextStepStates.isSwapped);
+    // setSortedData(nextStepStates.sortedData);
+    // setSortedItems(nextStepStates.sortedItems);
+    // setCurrentStep(nextStepStates.currentStep);
+    // setIsSelectStep(nextStepStates.isSelectStep);
+    // setStart(nextStepStates.start);
+    // setEnd(nextStepStates.end);
   };
 
   // const handleStepForward = () => {

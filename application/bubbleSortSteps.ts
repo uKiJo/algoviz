@@ -12,7 +12,7 @@ interface State {
   isSelectStep: boolean;
 }
 
-export function getNextStepStates(nextStepStates: State) {
+export function getNextStepStates(state: State) {
   const {
     currentStep,
     pass,
@@ -20,9 +20,9 @@ export function getNextStepStates(nextStepStates: State) {
     sortedData,
     sortedItems,
     isSelectStep,
-    // start,
-    // end,
-  } = nextStepStates;
+  } = state;
+
+  const nextStepStates = { ...state };
 
   const isPassFinished = currentStep === sortedData.length - pass - 1;
 
