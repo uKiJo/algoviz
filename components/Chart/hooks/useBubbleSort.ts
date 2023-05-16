@@ -38,15 +38,15 @@ export const useBubbleSort = (
   svgRef: React.MutableRefObject<SVGSVGElement>,
   data: Data[]
 ) => {
-  const [currentStep, setCurrentStep] = useState(-1);
-  const [pass, setPass] = useState(0);
-  const [start, setStart] = useState(false);
+  // const [currentStep, setCurrentStep] = useState(-1);
+  // const [pass, setPass] = useState(0);
+  // const [start, setStart] = useState(false);
   const [play, setPlay] = useState(false);
-  const [end, setEnd] = useState(false);
-  const [sortedData, setSortedData] = useState<Data[]>(myData);
-  const [isSelectStep, setIsSelectStep] = useState(false);
-  const [isSwapped, setIsSwapped] = useState(false);
-  const [sortedItems, setSortedItems] = useState(-1);
+  // const [end, setEnd] = useState(false);
+  // const [sortedData, setSortedData] = useState<Data[]>(myData);
+  // const [isSelectStep, setIsSelectStep] = useState(false);
+  // const [isSwapped, setIsSwapped] = useState(false);
+  // const [sortedItems, setSortedItems] = useState(-1);
   const [state, setState] = useState({
     currentStep: -1,
     pass: 0,
@@ -58,14 +58,11 @@ export const useBubbleSort = (
     sortedItems: -1,
   });
 
-  // const lastStepInPass = currentStep === sortedData.length - pass - 2;
-
   useEffect(() => {
     const svg = select(svgRef.current);
 
     // Function to reorder bars
     const reorderBars = () => {
-      console.log("EFFECT");
       // Update xScale domain
       const xScale = scaleBand()
         .domain(state.sortedData.map((d) => d.name))
@@ -107,48 +104,29 @@ export const useBubbleSort = (
     reorderBars();
   }, [state, svgRef]);
 
-  // useEffect(() => {
-  //   const intervalId =
-  //     play &&
-  //     setInterval(() => {
-  //       handleStepForward();
-  //     }, 1000);
+  useEffect(() => {
+    const intervalId =
+      play &&
+      setInterval(() => {
+        handleStepForward();
+      }, 1000);
 
-  //   if (sortedItems === sortedData.length - 1) clearInterval(intervalId);
+    if (state.sortedItems === state.sortedData.length - 1)
+      clearInterval(intervalId);
 
-  //   return () => {
-  //     clearInterval(intervalId);
-  //   };
-  // }, [sortedData, start, isSelectStep, currentStep, end, sortedItems, play]);
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [state, play]);
 
   const handlePlay = () => {
     setPlay(!play);
-    // console.log(currentStep);
   };
 
   const handleStepForward = () => {
-    console.log(state);
-    // const nextStepStates = getNextStepStates({
-    //   pass,
-    //   currentStep,
-    //   sortedData,
-    //   sortedItems,
-    //   isSwapped,
-    //   isSelectStep,
-    //   end,
-    //   start,
-    // });
     const nextStepStates = getNextStepStates(state);
 
     setState(nextStepStates);
-    // setPass(nextStepStates.pass);
-    // setIsSwapped(nextStepStates.isSwapped);
-    // setSortedData(nextStepStates.sortedData);
-    // setSortedItems(nextStepStates.sortedItems);
-    // setCurrentStep(nextStepStates.currentStep);
-    // setIsSelectStep(nextStepStates.isSelectStep);
-    // setStart(nextStepStates.start);
-    // setEnd(nextStepStates.end);
   };
 
   // const handleStepForward = () => {
