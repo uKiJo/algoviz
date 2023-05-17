@@ -83,4 +83,23 @@ describe("BubbleSortSteps", () => {
     const result = bubbleSortByStep(state);
     expect(result.currentStep).toBe(1);
   });
+
+  it("should increment step and make the last item sorted if the current object value is not greater than the next object value and the step is the last in the pass", () => {
+    const state = {
+      currentStep: 0,
+      pass: 0,
+      isSwapped: false,
+      sortedData: [
+        { name: "1", units: 1 },
+        { name: "2", units: 2 },
+      ],
+      isIterating: false,
+      isSelectStep: true,
+      sortedItems: 0,
+    };
+
+    const result = bubbleSortByStep(state);
+    expect(result.currentStep).toBe(1);
+    expect(result.sortedItems).toBe(1);
+  });
 });

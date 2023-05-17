@@ -8,11 +8,10 @@ interface State {
   sortedData: Data[];
   sortedItems: number;
   isIterating: boolean;
-  isSelectStep: boolean;
 }
 
 export function bubbleSortByStep(state: State) {
-  const { currentStep, pass, isSwapped, sortedData, isSelectStep } = state;
+  const { currentStep, pass, isSwapped, sortedData } = state;
 
   let nextStepStates = { ...state };
 
@@ -27,15 +26,10 @@ export function bubbleSortByStep(state: State) {
     if (currentStep <= 0) {
       nextStepStates.isIterating = true;
     }
-    // if (isSelectStep) {
+
     nextStepStates = isCurrentGreaterThanNext(nextStepStates)
       ? swapItems(nextStepStates)
       : (lastStepInPass ? markLastItemAsSorted : goToNextStep)(nextStepStates);
-    // } else {
-    //   nextStepStates = lastStepInPass
-    //     ? markLastItemAsSorted(nextStepStates)
-    //     : goToNextStep(nextStepStates);
-    // }
   }
 
   return nextStepStates;

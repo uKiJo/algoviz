@@ -44,7 +44,6 @@ export const useBubbleSort = (
     pass: 0,
     isIterating: false,
     sortedData: data,
-    isSelectStep: false,
     isSwapped: false,
     sortedItems: 0,
   });
