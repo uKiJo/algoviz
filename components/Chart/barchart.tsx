@@ -40,7 +40,7 @@ const BarChart: React.FC = () => {
     <div>
       <svg width={400} height={400} ref={svgRef}>
         <g className="x-axis" transform={`translate(0, ${300})`} />
-        <g className="y-axis" />
+        {/* <g className="y-axis" /> */}
       </svg>
       <button onClick={handleStepForward}>Step</button>
       <button onClick={handlePlay}> {play ? "Pause" : "Play"}</button>

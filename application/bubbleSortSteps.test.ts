@@ -1,224 +1,86 @@
-import { getNextStepStates } from "./bubbleSortSteps";
+import { bubbleSortByStep } from "./bubbleSortSteps";
 
 describe("BubbleSortSteps", () => {
-  it("should select the first two elements at the beginning of sorting ", () => {
-    const input = {
-      currentStep: -1,
+  it("should terminate sorting if no swaps are made at the end of the pass", () => {
+    const state = {
+      currentStep: 4,
       pass: 0,
       isSwapped: false,
       sortedData: [
-        {
-          name: "foo",
-          units: 2,
-        },
-        {
-          name: "bar",
-          units: 3,
-        },
-        {
-          name: "baz",
-          units: 1,
-        },
-        {
-          name: "hoge",
-          units: 6,
-        },
-        {
-          name: "piyo",
-          units: 3,
-        },
-        {
-          name: "hogera",
-          units: 4,
-        },
+        { name: "1", units: 1 },
+        { name: "2", units: 2 },
+        { name: "3", units: 3 },
+        { name: "4", units: 4 },
+        { name: "5", units: 5 },
       ],
-      sortedItems: -1,
-      start: false,
-      end: false,
-      isSelectStep: false,
-    };
-
-    const expected = {
-      ...input,
-      start: true,
-      currentStep: 0,
+      isIterating: false,
       isSelectStep: true,
+      sortedItems: 0,
     };
 
-    const result = getNextStepStates(input);
+    const result = bubbleSortByStep(state);
 
-    expect(result).toEqual(expected);
+    expect(result.sortedItems).toBe(5);
   });
 
-  it("should increment step if no swap is done", () => {
-    const input = {
+  it("should increment pass if atleast one swap is made at the end of the pass", () => {
+    const state = {
+      currentStep: 4,
+      pass: 0,
+      isSwapped: true,
+      sortedData: [
+        { name: "1", units: 1 },
+        { name: "2", units: 2 },
+        { name: "3", units: 3 },
+        { name: "4", units: 4 },
+        { name: "5", units: 5 },
+      ],
+      isIterating: false,
+      isSelectStep: true,
+      sortedItems: 0,
+    };
+
+    const result = bubbleSortByStep(state);
+
+    expect(result.pass).toBe(1);
+  });
+
+  it("should swap objects if the current object value is greater than the next object value", () => {
+    const state = {
       currentStep: 0,
       pass: 0,
       isSwapped: false,
       sortedData: [
-        {
-          name: "foo",
-          units: 2,
-        },
-        {
-          name: "bar",
-          units: 3,
-        },
-        {
-          name: "baz",
-          units: 1,
-        },
-        {
-          name: "hoge",
-          units: 6,
-        },
-        {
-          name: "piyo",
-          units: 3,
-        },
-        {
-          name: "hogera",
-          units: 4,
-        },
+        { name: "2", units: 2 },
+        { name: "1", units: 1 },
       ],
-      sortedItems: -1,
-      start: false,
-      end: false,
-      isSelectStep: false,
-    };
-
-    const expected = {
-      ...input,
-      start: true,
-      currentStep: 1,
+      isIterating: false,
       isSelectStep: true,
+      sortedItems: 0,
     };
 
-    const result = getNextStepStates(input);
-
-    expect(result).toEqual(expected);
+    const result = bubbleSortByStep(state);
+    expect(result.sortedData).toEqual([
+      { name: "1", units: 1 },
+      { name: "2", units: 2 },
+    ]);
   });
 
-  it("should swap if the first element is greater than its next adjacent", () => {
-    const input = {
-      currentStep: 1,
+  it("should increment step if the current object value is not greater than the next object value", () => {
+    const state = {
+      currentStep: 0,
       pass: 0,
       isSwapped: false,
       sortedData: [
-        {
-          name: "foo",
-          units: 2,
-        },
-        {
-          name: "bar",
-          units: 3,
-        },
-        {
-          name: "baz",
-          units: 1,
-        },
-        {
-          name: "hoge",
-          units: 6,
-        },
-        {
-          name: "piyo",
-          units: 3,
-        },
-        {
-          name: "hogera",
-          units: 4,
-        },
+        { name: "1", units: 1 },
+        { name: "2", units: 2 },
       ],
-      sortedItems: -1,
-      start: true,
-      end: false,
+      isIterating: false,
       isSelectStep: true,
+      sortedItems: 0,
     };
 
-    const expected = {
-      ...input,
-      sortedData: [
-        {
-          name: "foo",
-          units: 2,
-        },
-        {
-          name: "baz",
-          units: 1,
-        },
-        {
-          name: "bar",
-          units: 3,
-        },
-        {
-          name: "hoge",
-          units: 6,
-        },
-        {
-          name: "piyo",
-          units: 3,
-        },
-        {
-          name: "hogera",
-          units: 4,
-        },
-      ],
-      currentStep: 1,
-      isSelectStep: false,
-      isSwapped: true,
-    };
-
-    const result = getNextStepStates(input);
-
-    expect(result).toEqual(expected);
-  });
-
-  it("should increment step after swap is done", () => {
-    const input = {
-      currentStep: 1,
-      pass: 0,
-      isSwapped: true,
-      sortedData: [
-        {
-          name: "foo",
-          units: 2,
-        },
-        {
-          name: "bar",
-          units: 3,
-        },
-        {
-          name: "baz",
-          units: 1,
-        },
-        {
-          name: "hoge",
-          units: 6,
-        },
-        {
-          name: "piyo",
-          units: 3,
-        },
-        {
-          name: "hogera",
-          units: 4,
-        },
-      ],
-      sortedItems: -1,
-      start: true,
-      end: false,
-      isSelectStep: false,
-    };
-
-    const expected = {
-      ...input,
-      currentStep: 2,
-      isSelectStep: true,
-    };
-
-    const result = getNextStepStates(input);
-
-    expect(result).toEqual(expected);
+    const result = bubbleSortByStep(state);
+    expect(result.currentStep).toBe(1);
   });
 });

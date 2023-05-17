@@ -27,8 +27,8 @@ export const useCreateBarChart = (
     const xAxis = axisBottom(xScale);
     svg.select<SVGSVGElement>(".x-axis").call(xAxis);
 
-    const yAxis = axisLeft(yScale);
-    svg.select<SVGSVGElement>(".y-axis").call(yAxis);
+    // const yAxis = axisLeft(yScale);
+    // svg.select<SVGSVGElement>(".y-axis").call(yAxis);
 
     // Create initial bars
     svg
