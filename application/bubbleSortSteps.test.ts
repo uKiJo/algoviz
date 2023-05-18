@@ -97,4 +97,22 @@ describe("BubbleSortSteps", () => {
     expect(result.currentStep).toBe(1);
     expect(result.sortedItems).toBe(1);
   });
+
+  it("should increment step at the beginning of sorting", () => {
+    const state = {
+      currentStep: -1,
+      pass: 0,
+      isSwapped: false,
+      sortedData: [
+        { name: "1", units: 1 },
+        { name: "2", units: 2 },
+      ],
+      isIterating: false,
+      sortedItems: 0,
+    };
+
+    const result = bubbleSortByStep(state);
+
+    expect(result.currentStep).toBe(0);
+  });
 });

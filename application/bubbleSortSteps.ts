@@ -23,11 +23,14 @@ export function bubbleSortByStep(state: State) {
       ? terminateSort(nextStepStates)
       : goToNextPass(nextStepStates);
   } else {
-    if (currentStep <= 0) nextStepStates.isIterating = true;
+    if (currentStep < 0) nextStepStates.isIterating = true;
 
-    nextStepStates = isCurrentGreaterThanNext(nextStepStates)
-      ? swapItems(nextStepStates)
-      : (lastStepInPass ? markLastItemAsSorted : goToNextStep)(nextStepStates);
+    nextStepStates =
+      currentStep != -1 && isCurrentGreaterThanNext(nextStepStates)
+        ? swapItems(nextStepStates)
+        : (lastStepInPass ? markLastItemAsSorted : goToNextStep)(
+            nextStepStates
+          );
   }
 
   return nextStepStates;
@@ -61,7 +64,7 @@ function swapItems(nextStepStates: State) {
   };
 }
 
-function isCurrentGreaterThanNext(nextStepStates) {
+function isCurrentGreaterThanNext(nextStepStates: State) {
   const { sortedData, currentStep } = nextStepStates;
   return sortedData[currentStep].units > sortedData[currentStep + 1].units;
 }

@@ -115,9 +115,9 @@ export const useBubbleSort = (
   };
 
   const handleStepForward = () => {
-    const nextStepStates = bubbleSortByStep(state);
+    const nextState = bubbleSortByStep(state);
 
-    setState(nextStepStates);
+    setState(nextState);
   };
 
   return { handleStepForward, handlePlay, play };
