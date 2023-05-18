@@ -26,7 +26,6 @@ export function bubbleSortByStep(state: State) {
     if (currentStep <= 0) {
       nextStepStates.isIterating = true;
     }
-
     nextStepStates = isCurrentGreaterThanNext(nextStepStates)
       ? swapItems(nextStepStates)
       : (lastStepInPass ? markLastItemAsSorted : goToNextStep)(nextStepStates);
@@ -43,7 +42,6 @@ function markLastItemAsSorted(nextStepStates: State) {
     isIterating: false,
     currentStep: currentStep + 1,
     sortedItems: sortedItems + 1,
-    isSelectStep: true,
   };
 }
 
@@ -52,7 +50,6 @@ function goToNextStep(nextStepStates: State) {
   return {
     ...nextStepStates,
     currentStep: currentStep + 1,
-    isSelectStep: true,
   };
 }
 
@@ -61,7 +58,6 @@ function swapItems(nextStepStates: State) {
   return {
     ...nextStepStates,
     sortedData: swap(sortedData, currentStep, currentStep + 1),
-    isSelectStep: false,
     isSwapped: true,
   };
 }

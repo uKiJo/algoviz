@@ -14,7 +14,6 @@ describe("BubbleSortSteps", () => {
         { name: "5", units: 5 },
       ],
       isIterating: false,
-      isSelectStep: true,
       sortedItems: 0,
     };
 
@@ -36,7 +35,6 @@ describe("BubbleSortSteps", () => {
         { name: "5", units: 5 },
       ],
       isIterating: false,
-      isSelectStep: true,
       sortedItems: 0,
     };
 
@@ -55,7 +53,6 @@ describe("BubbleSortSteps", () => {
         { name: "1", units: 1 },
       ],
       isIterating: false,
-      isSelectStep: true,
       sortedItems: 0,
     };
 
@@ -76,7 +73,6 @@ describe("BubbleSortSteps", () => {
         { name: "2", units: 2 },
       ],
       isIterating: false,
-      isSelectStep: true,
       sortedItems: 0,
     };
 
@@ -94,7 +90,6 @@ describe("BubbleSortSteps", () => {
         { name: "2", units: 2 },
       ],
       isIterating: false,
-      isSelectStep: true,
       sortedItems: 0,
     };
 
